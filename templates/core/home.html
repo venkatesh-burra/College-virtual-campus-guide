@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home - QIS Virtual Campus Guide{% endblock %}
+
+{% block content %}
+
+<!-- Hero Banner -->
+<section class="hero-section text-white text-center">
+    <div class="container py-5">
+        <h1 class="display-4 fw-bold">Welcome to QIS College</h1>
+        <p class="lead">Your Gateway to Quality Education and Bright Future</p>
+        <a href="{% url 'enquiry' %}" class="btn btn-light btn-lg mt-3">
+            <i class="bi bi-pencil-square me-2"></i>Admission Enquiry
+        </a>
+    </div>
+</section>
+
+<!-- Short About College -->
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h2 class="text-primary mb-3">About QIS College</h2>
+                <p>QIS College of Engineering and Technology is a premier institution dedicated to providing quality education in engineering, management, and computer applications. Our campus offers modern facilities, experienced faculty, and excellent placement opportunities.</p>
+                <a href="{% url 'about' %}" class="btn btn-outline-primary">Learn More</a>
+            </div>
+            <div class="col-md-6 text-center">
+                <img src="{% static 'images/campus-main.svg' %}" alt="QIS College Campus" class="img-fluid rounded shadow">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose QIS -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center text-primary mb-4">Why Choose QIS?</h2>
+        <div class="row g-4">
+            <div class="col-md-3 col-sm-6">
+                <div class="card h-100 text-center border-0 shadow-sm">
+                    <div class="card-body">
+                        <i class="bi bi-people-fill text-primary fs-1"></i>
+                        <h5 class="card-title mt-3">Expert Faculty</h5>
+                        <p class="card-text small">Highly qualified professors with industry experience.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="card h-100 text-center border-0 shadow-sm">
+                    <div class="card-body">
+                        <i class="bi bi-building text-primary fs-1"></i>
+                        <h5 class="card-title mt-3">Modern Campus</h5>
+                        <p class="card-text small">State-of-the-art labs, library, and hostel facilities.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="card h-100 text-center border-0 shadow-sm">
+                    <div class="card-body">
+                        <i class="bi bi-briefcase-fill text-primary fs-1"></i>
+                        <h5 class="card-title mt-3">Placements</h5>
+                        <p class="card-text small">Strong industry connections and placement support.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="card h-100 text-center border-0 shadow-sm">
+                    <div class="card-body">
+                        <i class="bi bi-award-fill text-primary fs-1"></i>
+                        <h5 class="card-title mt-3">Accredited</h5>
+                        <p class="card-text small">Approved by AICTE and affiliated to JNTU.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Course Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center text-primary mb-4">Our Courses</h2>
+        <div class="row g-4">
+            {% for course in courses %}
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 shadow-sm">
+                    {% if course.image %}
+                    <img src="{{ course.image.url }}" class="card-img-top course-card-img" alt="{{ course.course_name }}">
+                    {% else %}
+                    <img src="{% static 'images/course-default.svg' %}" class="card-img-top course-card-img" alt="{{ course.course_name }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ course.course_name }}</h5>
+                        <p class="card-text small text-muted">{{ course.duration }}</p>
+                        <a href="{% url 'course_detail' course.pk %}" class="btn btn-primary btn-sm">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p class="text-muted">Courses will be displayed here. Run <code>python manage.py load_courses</code> to add sample courses.</p>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'course_list' %}" class="btn btn-outline-primary">View All Courses</a>
+        </div>
+    </div>
+</section>
+
+<!-- Placement Highlights -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <h2 class="text-center mb-4">Placement Highlights</h2>
+        <div class="row text-center">
+            <div class="col-md-3 col-6 mb-3">
+                <h2 class="fw-bold">500+</h2>
+                <p>Students Placed</p>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+                <h2 class="fw-bold">50+</h2>
+                <p>Recruiting Companies</p>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+                <h2 class="fw-bold">₹8 LPA</h2>
+                <p>Highest Package</p>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+                <h2 class="fw-bold">₹4.5 LPA</h2>
+                <p>Average Package</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Admission Enquiry CTA -->
+<section class="py-5 text-center">
+    <div class="container">
+        <h2 class="text-primary mb-3">Ready to Join QIS College?</h2>
+        <p class="lead">Submit your admission enquiry today and take the first step towards your career.</p>
+        <a href="{% url 'enquiry' %}" class="btn btn-primary btn-lg">
+            <i class="bi bi-send me-2"></i>Submit Enquiry
+        </a>
+    </div>
+</section>
+
+{% endblock %}

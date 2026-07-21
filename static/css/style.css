@@ -1,0 +1,67 @@
+/* QIS Virtual Campus Guide - Custom Styles */
+
+:root {
+    --qis-primary: #0d6efd;
+    --qis-dark: #0a58ca;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+}
+
+/* Hero Section on Home Page */
+.hero-section {
+    background: linear-gradient(135deg, var(--qis-primary) 0%, var(--qis-dark) 100%);
+    padding: 80px 0;
+}
+
+/* Page Header for inner pages */
+.page-header {
+    background: linear-gradient(135deg, var(--qis-primary) 0%, var(--qis-dark) 100%);
+}
+
+/* Course card image height */
+.course-card-img {
+    height: 200px;
+    object-fit: cover;
+}
+
+/* Gallery image height */
+.gallery-img {
+    height: 250px;
+    object-fit: cover;
+}
+
+/* Campus facility card image */
+.facility-img {
+    height: 200px;
+    object-fit: cover;
+}
+
+/* Navbar active link */
+.navbar-nav .nav-link.active {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/* Card hover effect */
+.card {
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* Footer links hover */
+footer a:hover {
+    text-decoration: underline !important;
+}
+
+/* Form focus styling */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--qis-primary);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}

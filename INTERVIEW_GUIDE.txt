@@ -1,0 +1,507 @@
+================================================================================
+  QIS VIRTUAL CAMPUS GUIDE — PROJECT & INTERVIEW GUIDE
+================================================================================
+
+Author     : Fresher Django Portfolio Project
+Project    : QIS Virtual Campus Guide
+Purpose    : Simple college website for students to explore courses and
+             submit admission enquiries
+Location   : qis-virtual-campus-guide/
+
+
+================================================================================
+1. PROJECT OVERVIEW (30-SECOND ELEVATOR PITCH)
+================================================================================
+
+"I built a college website called QIS Virtual Campus Guide using Django.
+Students can visit the site to learn about the college, browse courses,
+view a campus gallery, watch a virtual campus tour video, and submit an
+admission enquiry form. The admin can manage courses, view student
+enquiries, and upload gallery images through the Django admin panel.
+I kept the project simple using function-based views, SQLite database,
+Bootstrap 5 for the frontend, and basic Django concepts suitable for a
+beginner level."
+
+
+================================================================================
+2. WHY I BUILT THIS PROJECT
+================================================================================
+
+- To apply Django fundamentals I learned (Models, Views, Templates, Forms)
+- To build something that looks like a real college website
+- To practice CRUD operations through Django Admin
+- To demonstrate form handling and database storage
+- To create a portfolio project I can explain clearly in interviews
+
+
+================================================================================
+3. TECHNOLOGIES USED
+================================================================================
+
+BACKEND
+-------
+Python 3          → Programming language
+Django 4.2        → Web framework (handles routing, ORM, admin, forms)
+SQLite            → Lightweight database (file-based, good for learning)
+
+FRONTEND
+--------
+HTML              → Page structure
+CSS               → Custom styling (blue & white theme)
+Bootstrap 5       → Responsive UI components (navbar, cards, grid, forms)
+Bootstrap Icons   → Icons for navbar, footer, and page sections
+JavaScript        → Simple alert auto-dismiss on enquiry success message
+
+DJANGO FEATURES USED
+--------------------
+Models            → Database tables (Course, Enquiry, Gallery)
+Views             → Function-based views (FBV) to handle page requests
+Templates         → HTML pages with Django template syntax
+URL Routing       → Maps URLs to views using urls.py
+ModelForms        → Enquiry form connected to Enquiry model
+Django ORM        → Query and save data without writing raw SQL
+Django Admin      → Built-in admin panel to manage data
+Messages Framework→ Show success message after enquiry submission
+Template Inheritance → base.html shared across all pages
+Static Files      → CSS, JS, and images in /static folder
+Media Files       → User-uploaded images in /media folder
+
+
+================================================================================
+4. PROJECT ARCHITECTURE
+================================================================================
+
+The project follows Django's MVT (Model-View-Template) pattern:
+
+  MODEL      → Defines database structure (what data to store)
+  VIEW       → Handles user request and returns response (logic)
+  TEMPLATE   → HTML page shown to the user (presentation)
+
+Request Flow Example (Enquiry Form):
+
+  1. User visits /enquiry/
+  2. Django reads enquiry/urls.py → calls enquiry_form view
+  3. View creates EnquiryForm and renders enquiry_form.html
+  4. User fills form and clicks Submit (POST request)
+  5. View validates form → saves data to SQLite via ORM
+  6. Success message shown → user redirected to enquiry page
+
+Folder Structure:
+
+  qis-virtual-campus-guide/
+  │
+  ├── manage.py                 → Django command-line tool
+  ├── requirements.txt          → Python packages (Django, Pillow)
+  ├── README.md                 → Installation instructions
+  │
+  ├── qis_campus/               → Main project configuration
+  │   ├── settings.py           → Database, apps, static/media settings
+  │   ├── urls.py               → Main URL router (includes app URLs)
+  │   └── wsgi.py               → Server entry point
+  │
+  ├── core/                     → App for static pages
+  │   ├── models.py             → Gallery model
+  │   ├── views.py              → home, about, gallery, campus_tour, contact
+  │   └── urls.py               → URL patterns for core pages
+  │
+  ├── courses/                  → App for course pages
+  │   ├── models.py             → Course model
+  │   ├── views.py              → course_list, course_detail
+  │   └── urls.py               → URL patterns for courses
+  │
+  ├── enquiry/                  → App for admission enquiry
+  │   ├── models.py             → Enquiry model
+  │   ├── forms.py              → EnquiryForm (ModelForm)
+  │   ├── views.py              → enquiry_form view
+  │   └── urls.py               → URL pattern for enquiry page
+  │
+  ├── templates/                → All HTML templates
+  │   ├── base.html             → Master layout (navbar + footer)
+  │   ├── core/                 → Home, About, Gallery, etc.
+  │   ├── courses/              → Course list and detail pages
+  │   └── enquiry/              → Enquiry form page
+  │
+  ├── static/                   → CSS, JS, images (served directly)
+  └── media/                    → Uploaded files (course/gallery images)
+
+
+================================================================================
+5. DATABASE MODELS EXPLAINED
+================================================================================
+
+MODEL 1: Course (courses app)
+------------------------------
+Stores all college courses.
+
+  Fields:
+  - course_name    → Name of the course (e.g., B.Tech - CSE)
+  - duration       → Course length (e.g., 4 Years)
+  - annual_fee     → Fee per year (e.g., 85000)
+  - eligibility    → Who can apply (e.g., 10+2 with PCM)
+  - description    → Full course description
+  - image          → Optional course image (uploaded via admin)
+
+MODEL 2: Enquiry (enquiry app)
+-------------------------------
+Stores admission enquiry submissions from students.
+
+  Fields:
+  - student_name   → Name of the student
+  - email          → Student email address
+  - phone          → Contact number
+  - course         → ForeignKey to Course (which course they want)
+  - city           → Student's city
+  - message        → Additional message from student
+  - created_at     → Auto timestamp when enquiry was submitted
+
+  Note: ForeignKey means each enquiry is linked to one course.
+  This creates a relationship between Enquiry and Course tables.
+
+MODEL 3: Gallery (core app)
+----------------------------
+Stores campus photos uploaded by admin.
+
+  Fields:
+  - title          → Photo title (e.g., "Main Building")
+  - image          → Photo file uploaded to media/gallery/
+
+
+================================================================================
+6. PAGES AND WHAT EACH PAGE DOES
+================================================================================
+
+PAGE 1: HOME (/)
+  - Hero banner with college name and admission button
+  - Short about section
+  - "Why Choose QIS" cards (4 features)
+  - Course preview (first 4 courses from database)
+  - Placement highlights (static numbers)
+  - Call-to-action button for enquiry
+
+PAGE 2: ABOUT (/about/)
+  - College introduction paragraph
+  - Vision and Mission cards
+  - Facilities section (Library, Labs, Hostel, etc.)
+
+PAGE 3: COURSES (/courses/)
+  - Lists all courses from database in Bootstrap cards
+  - Each card shows: image, name, duration, eligibility, fee
+  - "View Details" button goes to course detail page
+
+PAGE 4: COURSE DETAIL (/courses/<id>/)
+  - Shows full information about one course
+  - "Apply Now" button links to enquiry form
+
+PAGE 5: GALLERY (/gallery/)
+  - Displays all images uploaded by admin
+  - Simple Bootstrap image grid
+
+PAGE 6: CAMPUS TOUR (/campus-tour/)
+  - Embedded YouTube video
+  - 6 facility cards (Library, Computer Lab, Seminar Hall,
+    Auditorium, Hostel, Sports Ground)
+
+PAGE 7: ENQUIRY (/enquiry/)
+  - ModelForm with fields: name, email, phone, city, course, message
+  - On submit: saves to database + shows success message
+
+PAGE 8: CONTACT (/contact/)
+  - College address, phone, email
+  - Google Map embed
+  - No form (as per project requirement)
+
+ADMIN PANEL (/admin/)
+  - Add/Edit/Delete courses
+  - View all student enquiries (read-only created_at)
+  - Upload gallery images
+
+
+================================================================================
+7. KEY CODE CONCEPTS TO EXPLAIN
+================================================================================
+
+CONCEPT 1: Function-Based View (FBV)
+-------------------------------------
+Example from enquiry/views.py:
+
+  def enquiry_form(request):
+      if request.method == 'POST':
+          form = EnquiryForm(request.POST)
+          if form.is_valid():
+              form.save()
+              messages.success(request, 'Your enquiry has been submitted...')
+              return redirect('enquiry')
+      else:
+          form = EnquiryForm()
+      return render(request, 'enquiry/enquiry_form.html', {'form': form})
+
+Explain as:
+"When user submits the form (POST), I validate it and save to database.
+If successful, I show a message and redirect. For normal visit (GET),
+I just show an empty form."
+
+
+CONCEPT 2: ModelForm
+---------------------
+Example from enquiry/forms.py:
+
+  class EnquiryForm(forms.ModelForm):
+      class Meta:
+          model = Enquiry
+          fields = ['student_name', 'email', 'phone', 'city', 'course', 'message']
+
+Explain as:
+"ModelForm automatically creates a form from my Enquiry model.
+I don't need to define each field manually. Django handles validation
+and saving to the database when I call form.save()."
+
+
+CONCEPT 3: ForeignKey Relationship
+-----------------------------------
+In enquiry/models.py:
+
+  course = models.ForeignKey(Course, on_delete=models.CASCADE)
+
+Explain as:
+"Each enquiry is linked to one course. ForeignKey creates a relationship
+between Enquiry and Course tables. When a student selects a course in
+the form, Django stores the course ID in the enquiry record."
+
+
+CONCEPT 4: Template Inheritance
+--------------------------------
+base.html contains navbar and footer.
+All other pages use: {% extends 'base.html' %}
+
+Explain as:
+"I created one master template (base.html) with navbar and footer.
+All pages extend it using {% extends 'base.html' %}. This avoids
+repeating the same HTML on every page."
+
+
+CONCEPT 5: URL Routing
+-----------------------
+Main urls.py includes app URLs:
+  path('courses/', include('courses.urls'))
+
+courses/urls.py defines:
+  path('', views.course_list, name='course_list')
+  path('<int:pk>/', views.course_detail, name='course_detail')
+
+Explain as:
+"Django uses urls.py to map URLs to views. I split URLs by app.
+The main urls.py includes each app's urls.py. Named URLs like
+{% url 'course_list' %} make links easy to maintain."
+
+
+CONCEPT 6: Django Admin
+------------------------
+In courses/admin.py:
+
+  @admin.register(Course)
+  class CourseAdmin(admin.ModelAdmin):
+      list_display = ('course_name', 'duration', 'annual_fee')
+
+Explain as:
+"By registering models in admin.py, Django automatically creates
+an admin interface. I customized list_display to show important
+columns and added search_fields for easy filtering."
+
+
+================================================================================
+8. HOW TO EXPLAIN IN AN INTERVIEW (STEP BY STEP)
+================================================================================
+
+STEP 1 — INTRODUCE THE PROJECT (1 minute)
+------------------------------------------
+"I built a college website using Django called QIS Virtual Campus Guide.
+It has 7 pages where students can explore courses, view campus photos,
+watch a campus tour video, and submit admission enquiries. The admin
+can manage courses and view enquiries through Django's built-in admin
+panel. I used function-based views, SQLite, and Bootstrap 5."
+
+
+STEP 2 — EXPLAIN ARCHITECTURE (1-2 minutes)
+--------------------------------------------
+"I followed Django's MVT pattern. I split the project into 3 apps:
+  - core app for static pages like Home, About, Gallery
+  - courses app for course listing and details
+  - enquiry app for the admission form
+
+Each app has its own models, views, and urls. Templates are in a
+central templates folder with a base.html for template inheritance."
+
+
+STEP 3 — EXPLAIN DATABASE (1-2 minutes)
+----------------------------------------
+"I created 3 models:
+  1. Course — stores course details like name, fee, eligibility
+  2. Enquiry — stores student form submissions with a ForeignKey to Course
+  3. Gallery — stores campus photos uploaded by admin
+
+I used Django ORM to query data. For example, on the home page I fetch
+the first 4 courses using Course.objects.all()[:4]. No raw SQL needed."
+
+
+STEP 4 — EXPLAIN FORM HANDLING (1-2 minutes)
+---------------------------------------------
+"For the enquiry page, I used a ModelForm connected to the Enquiry model.
+When the user submits the form:
+  1. View receives POST request
+  2. Form validates the data
+  3. form.save() stores it in SQLite
+  4. Django Messages Framework shows a success alert
+  5. User is redirected back to the enquiry page
+
+This demonstrates form validation, database write, and user feedback."
+
+
+STEP 5 — EXPLAIN ADMIN PANEL (30 seconds)
+------------------------------------------
+"I registered all 3 models in admin.py. The admin can add/edit/delete
+courses, view student enquiries with filters, and upload gallery images.
+This gives a simple backend without building a separate admin dashboard."
+
+
+STEP 6 — MENTION WHAT YOU LEARNED (1 minute)
+---------------------------------------------
+"Through this project I learned:
+  - How Django MVT architecture works
+  - Creating models and running migrations
+  - Writing function-based views
+  - URL routing with named URLs
+  - Template inheritance with base.html
+  - ModelForms for easy form handling
+  - Static and media file configuration
+  - Django admin customization
+  - Using Bootstrap 5 for responsive design"
+
+
+================================================================================
+9. COMMON INTERVIEW QUESTIONS & ANSWERS
+================================================================================
+
+Q: Why did you choose Django?
+A: Django is a Python web framework that comes with many built-in features
+   like admin panel, ORM, form handling, and authentication. It follows
+   the "batteries included" philosophy, so I can build a full website
+   quickly without writing everything from scratch.
+
+Q: What is MVT in Django?
+A: MVT stands for Model-View-Template. Model defines the database structure,
+   View handles the business logic and request processing, and Template
+   is the HTML shown to the user. It's similar to MVC but Django calls
+   the controller a "View" and the view a "Template."
+
+Q: What is the difference between GET and POST?
+A: GET is used to fetch/display a page (like opening the enquiry form).
+   POST is used to submit data (like submitting the enquiry form).
+   In my view, I check request.method to handle both cases.
+
+Q: What is a ForeignKey?
+A: ForeignKey creates a relationship between two models. In my project,
+   Enquiry has a ForeignKey to Course, meaning each enquiry belongs to
+   one course. It stores the course's ID in the enquiry table.
+
+Q: What are migrations?
+A: Migrations are Django's way of updating the database schema when models
+   change. I run makemigrations to create migration files and migrate to
+   apply them to the database.
+
+Q: What is the difference between static and media files?
+A: Static files (CSS, JS, images) are part of the project code and served
+   from the /static folder. Media files are user-uploaded content (course
+   images, gallery photos) stored in /media folder.
+
+Q: Why function-based views instead of class-based views?
+A: Function-based views are simpler and easier to understand for beginners.
+   Each view is a simple Python function that takes a request and returns
+   a response. Class-based views are more powerful but add complexity.
+
+Q: How do you handle form validation?
+A: Django ModelForm handles validation automatically based on model field
+   types. EmailField validates email format, CharField checks max length.
+   I call form.is_valid() before saving. If invalid, errors are shown.
+
+Q: What is template inheritance?
+A: I created base.html with common layout (navbar, footer). Other templates
+   extend it using {% extends 'base.html' %} and fill content blocks.
+   This keeps code DRY (Don't Repeat Yourself).
+
+Q: How would you improve this project?
+A: I would add user authentication, email notifications on enquiry,
+   search/filter for courses, pagination for large lists, and deploy it
+   on a platform like PythonAnywhere or Render.
+
+
+================================================================================
+10. DEMO FLOW (WHEN INTERVIEWER ASKS TO SHOW THE PROJECT)
+================================================================================
+
+Follow this order during a live demo:
+
+  1. Start server: python manage.py runserver
+  2. Open Home page → explain hero, courses section, placement stats
+  3. Click About → show vision, mission, facilities
+  4. Click Courses → show Bootstrap cards loaded from database
+  5. Click View Details on any course → show detail page
+  6. Click Enquiry → fill and submit form → show success message
+  7. Open Admin (/admin/) → show courses list, enquiry submissions
+  8. Show Gallery → explain admin uploads images here
+  9. Show Campus Tour → YouTube embed + facility cards
+  10. Show Contact → address and map
+
+Keep VS Code open alongside to show:
+  - models.py (database design)
+  - views.py (request handling)
+  - forms.py (ModelForm)
+  - urls.py (routing)
+  - templates (HTML structure)
+
+
+================================================================================
+11. QUICK REFERENCE — COMMANDS
+================================================================================
+
+  Activate virtual environment (Windows):
+    venv\Scripts\activate
+
+  Install packages:
+    pip install -r requirements.txt
+
+  Create database tables:
+    python manage.py migrate
+
+  Load sample courses:
+    python manage.py load_courses
+
+  Create admin user:
+    python manage.py createsuperuser
+
+  Run development server:
+    python manage.py runserver
+
+  Open in browser:
+    http://127.0.0.1:8000/        → Website
+    http://127.0.0.1:8000/admin/  → Admin Panel
+
+
+================================================================================
+12. PROJECT HIGHLIGHTS TO MENTION
+================================================================================
+
+  ✓ Clean 3-app architecture (core, courses, enquiry)
+  ✓ 3 database models with proper relationships
+  ✓ 7 responsive pages with Bootstrap 5
+  ✓ ModelForm with validation and success message
+  ✓ Django Admin for backend management
+  ✓ Template inheritance for maintainable HTML
+  ✓ Static and media file handling
+  ✓ Management command to seed sample data
+  ✓ Beginner-friendly, interview-ready code
+
+
+================================================================================
+  END OF DOCUMENT
+  Good luck with your interview!
+================================================================================

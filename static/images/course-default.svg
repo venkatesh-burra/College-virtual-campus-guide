@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+  <rect width="800" height="500" fill="#dee2e6"/>
+  <rect x="200" y="100" width="400" height="300" fill="#0d6efd" opacity="0.2" rx="8"/>
+  <text x="400" y="260" font-family="Arial, sans-serif" font-size="28" fill="#0d6efd" text-anchor="middle" font-weight="bold">Course Image</text>
+</svg>
